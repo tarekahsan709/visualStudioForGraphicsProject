@@ -3,308 +3,599 @@
 #include<math.h>
 
 #include<GL/glut.h>
+#define PI 3.14159
 
-double cameraAngle;
+double wheelPostionx = 0;
+double cameraAngle, cameraAngleDelta;
+int canDrawGrid;
+
+double cameraHeight;
+double cameraRadius;
+
+double carcentrex = 0, carcentrey = 0, carcentrez = 0;	//for moving whole shape
+double speed = .5;
+void drawWheel(double x){
+	glScalef(2, 2, 2);
+	glTranslatef(x, 0, 0);
+	glPushMatrix(); {
+
+		glRotatef(90, 1, 0, 0);
+		glPushMatrix(); {
+			glColor3f(0, 0, 0);
+			//** wheel's black outer part **//
+			glutSolidTorus(.55, 1.8, 25, 25);
+
+			//** wheel's inner disc part **//
+			glColor3f(.6, .6, .6);
+			gluDisk(gluNewQuadric(), 0, 1.25, 100, 100);
+
+			//** Loop for drawing lines in inner part of wheel **/
+			//inner lines
+			glColor3f(.2, .2, .2);
+			double i = .25*wheelPostionx;
+			while (i<2 * PI + .25*wheelPostionx)
+			{
+				glBegin(GL_LINES);
+				{
+					glVertex3f(0, 0, .1);
+					glVertex3f(1.25*cos(i), 1.25*sin(i), .1);
+				}
+				glEnd();
+				i += PI / 4;	//distance from one lines to another is 45 degree 
+			}
+
+			//outer lines
+			i = .25*wheelPostionx;
+			while (i<2 * PI + .25*wheelPostionx)
+			{
+				glBegin(GL_LINES);
+				{
+					glColor3f(.2, .2, .2);
+					glVertex3f(0, 0, -.1);
+					glVertex3f(1.25*cos(i), 1.25*sin(i), -.1);
+				}
+				glEnd();
+				i += PI / 4;
+			}
+		}
+		glPopMatrix();
+	}glPopMatrix();
+}
+
+void drawWheel2(double x,double y){
+	glScalef(2, 2, 2);
+	glTranslatef(x, y, 0);
+	glPushMatrix(); {
+
+		glRotatef(90, 1, 0, 0);
+		glPushMatrix(); {
+			glColor3f(0, 0, 0);
+			//** wheel's black outer part **//
+			glutSolidTorus(.55, 1.8, 25, 25);
+
+			//** wheel's inner disc part **//
+			glColor3f(.6, .6, .6);
+			gluDisk(gluNewQuadric(), 0, 1.25, 100, 100);
+
+			//** Loop for drawing lines in inner part of wheel **/
+			//inner lines
+			glColor3f(.2, .2, .2);
+			double i = .25*wheelPostionx;
+			while (i<2 * PI + .25*wheelPostionx)
+			{
+				glBegin(GL_LINES);
+				{
+					glVertex3f(0, 0, .1);
+					glVertex3f(1.25*cos(i), 1.25*sin(i), .1);
+				}
+				glEnd();
+				i += PI / 4;	//distance from one lines to another is 45 degree 
+			}
+
+			//outer lines
+			i = .25*wheelPostionx;
+			while (i<2 * PI + .25*wheelPostionx)
+			{
+				glBegin(GL_LINES);
+				{
+					glColor3f(.2, .2, .2);
+					glVertex3f(0, 0, -.1);
+					glVertex3f(1.25*cos(i), 1.25*sin(i), -.1);
+				}
+				glEnd();
+				i += PI / 4;
+			}
+		}
+		glPopMatrix();
+	}glPopMatrix();
+}
+
+void drawShape(double y){
+	//glPushMatrix();
+	//{
+	//	glTranslatef(0, 0, 1);
+		
+
+
+
+	glPushMatrix();
+	{
+		glColor3f(.2, .2, 0.2);
+		glTranslatef(-35, 0, 14);
+		/*glScalef(0.3,1,0);
+		glRotatef(-90, 1, 0, 0);*/
+
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(0, y, 2);
+			glVertex3f(45, y, 2);
+			glVertex3f(45, y, 0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+
+
+	glPushMatrix();
+	{
+		glColor3f(.2, .2, 0.2);
+		glTranslatef(5, 0, 8);
+		/*glScalef(0.3,1,0);
+		glRotatef(-90, 1, 0, 0);*/
+
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(0, y, 8);
+			glVertex3f(5, y, 8);
+			glVertex3f(5, y, 0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+	glPushMatrix();
+	{
+		glColor3f(.2, .2, 0.2);
+		glTranslatef(-20, 0, 8);
+		/*glScalef(0.3,1,0);
+		glRotatef(-90, 1, 0, 0);*/
+
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(0, y, 8);
+			glVertex3f(10, y, 8);
+			glVertex3f(10, y, 0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+
+
+
+
+	glPushMatrix();
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor4f(0, 0, 0,.5);
+		glTranslatef(-10,0,8);
+		/*glScalef(0.3,1,0);
+		glRotatef(-90, 1, 0, 0);*/
+
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(0, y, 6);
+			glVertex3f(15, y, 6);
+			glVertex3f(15, y, 0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+	}glPopMatrix();
+	
+
+	glPushMatrix();
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor4f(0, 0, 0, .5);
+		glTranslatef(-35, 0, 8);
+		/*glScalef(0.3,1,0);
+		glRotatef(-90, 1, 0, 0);*/
+
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(0, y, 6);
+			glVertex3f(15, y, 6);
+			glVertex3f(15, y, 0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+
+
+
+	
+	//-----------------------right side----------------------------
+	//-----------------------middle part---------------------------
+	glPushMatrix();
+	{
+		
+		/*glTranslatef(0,-10,25);
+		glScalef(0.3,1,0);
+		glRotatef(-90, 1, 0, 0);*/
+		glColor3f(0.2, .2, 0.2);
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(0, y,1);
+			glVertex3f(.5, y, 1);
+			glVertex3f(.5, y, 0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+
+
+	//-----------------------2nd part---------------------------
+	glPushMatrix();
+	{
+		glColor3f(0.2, .2, 0.2);
+		/*
+		glScalef(0.3,1,0);
+		glRotatef(-90, 1, 0, 0);*/
+		glTranslatef(0,0,5); //last one ins y axis
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(0, y, 3);
+			glVertex3f(10, y, 3);
+			glVertex3f(10, y, 0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+	//-----------------------3rd part---------------------------
+
+	glPushMatrix();
+	{
+		glColor3f(0.2, .2, 0.2);
+		/*
+		glScalef(0.3,1,0);
+		glRotatef(-90, 1, 0, 0);*/
+		//glTranslatef(0, 0, 7); //last one ins y axis
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(11, y, 16);
+			glVertex3f(12, y, 16);
+			glVertex3f(12, y, 0);
+			glVertex3f(11, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+	//-----------------------4th part---------------------------
+	glPushMatrix();
+	{
+		glColor3f(0.2, .2, 0.2);
+		/*
+		glScalef(0.3,1,0);
+		glRotatef(-90, 1, 0, 0);*/
+		//glTranslatef(0, 0, 7); //last one ins y axis
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(10, y, 10);
+			glVertex3f(17, y, 10);
+			glVertex3f(17, y, 0);
+			glVertex3f(10, y, 0);
+		}glEnd();
+	}glPopMatrix();
+	
+	//-----------------------5th part triangle---------------------------
+	glPushMatrix();
+	{
+		glColor3f(0.2, .2, 0.2);
+		glTranslatef(-13,0,10);
+		glBegin(GL_TRIANGLES); {	
+			glVertex3f(23, y, 0);
+			glVertex3f(23, y,6 );
+			glVertex3f(31, y, 0);
+		}glEnd();
+
+	}glPopMatrix();
+
+	//-----------------------Back Cover----------------------------
+	glPushMatrix();
+	{
+		glColor3f(0.2, .2, 0.2);
+		glTranslatef(-3,-51,0);
+		
+		glRotatef(90, 0, 0, 1);
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(31, y, 10);
+			glVertex3f(51, y, 10);
+			glVertex3f(51, y, 0);
+			glVertex3f(31, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+	//-----------------------Front Cover----------------------------
+	glPushMatrix();
+	{
+		glColor3f(0.2, .2, 0.2);
+		glTranslatef(-50, -51, 0);
+
+		glRotatef(90, 0, 0, 1);
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(31, y, 8);
+			glVertex3f(51, y, 8);
+			glVertex3f(51, y, 0);
+			glVertex3f(31, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+
+
+
+	//-----------------------Left side----------------------------
+
+	glPushMatrix();
+	{
+		glColor3f(0.2, .2, 0.2);
+		/*glTranslatef(0,-10,25);
+		glScalef(0.3,1,0);
+		glRotatef(-90, 1, 0, 0);*/
+
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(0, y, 8);
+			glVertex3f(-30, y, 8);
+			glVertex3f(-30, y, 0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+	//-----------------------2nd part---------------------------
+	glPushMatrix();
+	{
+		glColor3f(0.2, .2, 0.2);
+		/*
+		glScalef(0.3,1,0);
+		glRotatef(-90, 1, 0, 0);*/
+		glTranslatef(0, 0, 5); //last one ins y axis
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(-30, y, 3);
+			glVertex3f(-39, y, 3);
+			glVertex3f(-39, y, 0);
+			glVertex3f(-30, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+	//-----------------------3rd part---------------------------
+	glPushMatrix();
+	{
+		glColor3f(0.2, .2, 0.2);
+		/*
+		glScalef(0.3,1,0);
+		glRotatef(-90, 1, 0, 0);*/
+		//glTranslatef(0, 0, 7); //last one ins y axis
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(-39, y, 8);
+			glVertex3f(-50, y, 8);
+			glVertex3f(-50, y, 0);
+			glVertex3f(-39, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+	//-----------------------4th part---------------------------
+	//glPushMatrix();
+	//{
+	//	glColor3f(1, 0, 0);
+	//	/*
+	//	glScalef(0.3,1,0);
+	//	glRotatef(-90, 1, 0, 0);*/
+	//	//glTranslatef(0, 0, 7); //last one ins y axis
+	//	glBegin(GL_QUADS);
+	//	{
+	//		glVertex3f(-38, y, 10);
+	//		glVertex3f(-50, y, 10);
+	//		glVertex3f(-50, y, 0);
+	//		glVertex3f(-38, y, 0);
+	//	}glEnd();
+	//}glPopMatrix();
+
+	//-------------------Another Right side---------------------
+	//glPushMatrix();
+	//{
+	//	glColor3f(0, 0, 1);
+	//	/*glTranslatef(0,-10,25);
+	//	glScalef(0.3,1,0);
+	//	glRotatef(-90, 1, 0, 0);*/
+
+	//	glBegin(GL_QUADS);
+	//	{
+	//		glVertex3f(0, y-10, 10);
+	//		glVertex3f(30, y-10, 10);
+	//		glVertex3f(30, y-10, 0);
+	//		glVertex3f(0, y-10, 0);
+	//	}glEnd();
+	//}glPopMatrix();
+
+
+	//------------------roof---------------------------
+
+	glPushMatrix(); 
+	{
+		glColor3f(0.2, .2, 0.2);
+		glTranslatef(-35,-20,16);
+		glScalef(1.65,1,0);
+		glRotatef(-90, 1, 0, 0);
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(0, y, 20);
+			glVertex3f(27, y, 20);
+			glVertex3f(27, y, 0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+
+	}glPopMatrix();
+
+	//-----------------under ground---------------------
+	glPushMatrix();
+	{
+		glColor3f(0.2, .2, 0.2);
+		glTranslatef(-47, -20,1);
+		glScalef(1.85,1, 0);
+		glRotatef(-90, 1, 0, 0);
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(0, y, 20);
+			glVertex3f(35, y, 20);
+			glVertex3f(35, y, 0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+
+	}glPopMatrix();
+	//-----------------right side
+		
+	
+	glPushMatrix();
+	{
+		glColor3f(0.2, .2, 0.2);
+		glTranslatef(-45, 0, 8);
+		glBegin(GL_TRIANGLES); {
+			glVertex3f(10, y, 8);
+			glVertex3f(10, y,0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+
+	}glPopMatrix();
+
+
+
+
+
+
+
+	/*}glPopMatrix();*/
+
+}
+void frontGlass(double y)
+{
+
+	//-----------------------Front Glass----------------------------
+	glPushMatrix();
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor4f(0, 0, 0, .5);
+		glTranslatef(-44, -20, 8);
+
+		glRotatef(50, 0, 1, 0);
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(0, y, 12);
+			glVertex3f(0, y + 20, 12);
+			glVertex3f(0, y + 20, 0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+	//-----------------------Back Glass----------------------------
+	glPushMatrix();
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor4f(0, 0, 0, .5);
+		glTranslatef(16, -20, 10);
+
+		glRotatef(-51, 0, 1, 0);
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(0, y, 9);
+			glVertex3f(0, y + 20, 9);
+			glVertex3f(0, y + 20, 0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+	//-----------------------Front Engine cover----------------------------
+	glPushMatrix();
+	{
+		glColor3f(0.2, .2, 0.2);
+		glTranslatef(-50, -20, 8);
+
+		glRotatef(90, 0, 1, 0);
+		glBegin(GL_QUADS);
+		{
+			glVertex3f(0, y, 8.5);
+			glVertex3f(0, y + 20, 8.5);
+			glVertex3f(0, y + 20, 0);
+			glVertex3f(0, y, 0);
+		}glEnd();
+	}glPopMatrix();
+
+
+}
+
 
 void display(){
 	//codes for Models, Camera
 
 	//clear the display
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0, 0, 0, 0);    //color black
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);        //clear buffers to preset values
+	glClearColor(1, 1, 1, 0);	//color black
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		//clear buffers to preset values
 
 	/***************************
 	/ set-up camera (view) here
 	****************************/
 	//load the correct matrix -- MODEL-VIEW matrix
-	glMatrixMode(GL_MODELVIEW);        //specify which matrix is the current matrix
+	glMatrixMode(GL_MODELVIEW);		//specify which matrix is the current matrix
 
 	//initialize the matrix
-	glLoadIdentity();                //replace the current matrix with the identity matrix [Diagonals have 1, others have 0]
+	glLoadIdentity();				//replace the current matrix with the identity matrix [Diagonals have 1, others have 0]
 
 	//now give three info
 	//1. where is the camera (viewer)?
 	//2. where is the camera looking?
 	//3. Which direction is the camera's UP direction?
 
-	// gluLookAt(0,-150,20,    0,0,0,    0,0,1);
-	gluLookAt(150 * sin(cameraAngle), -150 * cos(cameraAngle), 50, 0, 0, 1, 0, 0, 1);
+	//gluLookAt(0,-150,20,	0,0,0,	0,0,1);
+	gluLookAt(cameraRadius*sin(cameraAngle), -cameraRadius*cos(cameraAngle), cameraHeight, 0, 0, 0, 0, 0, 1);
 
 	//again select MODEL-VIEW
 	glMatrixMode(GL_MODELVIEW);
 
 
-	/****************************
-	/ Add your objects from here
-	****************************/
-	//gluCylinder(quadric,10,10,30,20,20)
-	//(pointer,base radius,top radius, height, slice,stack)
-	//glutSolidSphere(base,height, slice, stack)
-
-
-	//-------------------------------3D Hosue---------------------------
-
-	//---------------Cube-----------
-	/*glPushMatrix(); {
-		glScalef(.2, .9, .9);
-		glTranslatef(0, 0, 50);
-		glutSolidCube(40);
-	}glPopMatrix();
-*/
-
-
-	//---------------Cone-----------
-	/*glColor4f(1, 0, 0, 0);
-	glPushMatrix(); {
-		glTranslatef(0, 0, 70);
-		glutSolidCone(10, 20, 30, 20);
-	}glPopMatrix();
-*/
-
-	//---------------Cylinder-----------
-	//glPushMatrix(); {
-	//	//glTranslatef(0, 0, 10);
-	//	glScalef(3, .1, .6);//Width scale factor along X, Scale factors along the Z axis, Scale factors along the Y axis
-	//	glTranslatef(0,-100,0);
-
-	//	glColor4f(1, 0, 0, 0);
-	//	GLUquadricObj *quadric;
-	//	quadric = gluNewQuadric();
-
-	//	gluCylinder(quadric, 10, 10, 60, 60, 60);
-	//}glPopMatrix();
-
-
-
-
-
-	glPushMatrix(); {
-
-		//glScalef(1.5, .1, .6);//Width scale factor along X, Scale factors along the Z axis, Scale factors along the Y axis
-		
-		//glTranslatef(0, 100, 0);
-
-		glColor3f(1, 0, 0);
-		glBegin(GL_QUADS); {
-			glVertex3f(0, 0, 15);
-			glVertex3f(40, 0, 15);
-			glVertex3f(40, 0, 0);
-			glVertex3f(0, 0, 0);
-		}glEnd();
-	}glPopMatrix();
-
-
-
-
-	glPushMatrix(); {
-
-		//glScalef(1.5, .1, .6);//Width scale factor along X, Scale factors along the Z axis, Scale factors along the Y axis
-
-		glTranslatef(0,30, 0);
-
-		glColor3f(1, 0, 0);
-		glBegin(GL_QUADS); {
-			glVertex3f(0, 0, 15);
-			glVertex3f(40, 0, 15);
-			glVertex3f(40, 0, 0);
-			glVertex3f(0, 0, 0);
-		}glEnd();
-	}glPopMatrix();
-
-
-
-	glPushMatrix(); {
-
-		//glScalef(1.5, .1, .6);//Width scale factor along X, Scale factors along the Z axis, Scale factors along the Y axis
-
-	    //	glTranslatef(0, 30, 0);
-
-		glRotatef(90,0,0,2);
-		glColor3f(0, 0, 1);
-		glBegin(GL_QUADS); {
-			glVertex3f(0, 0, 15);
-			glVertex3f(30, 0, 15);
-			glVertex3f(30, 0, 0);
-			glVertex3f(0, 0, 0);
-		}glEnd();
-	}glPopMatrix();
-
-
-
-	glPushMatrix(); {	
-		glColor3f(0, 0, 1);
-		glTranslatef(0,0,20);
-		glBegin(GL_QUADS); {
-			glVertex3f(40, 0, 15);
-			glVertex3f(60, 0, 15);
-			glVertex3f(60, 0, 0);
-			glVertex3f(40, 0, 0);
-		}glEnd();
-	}glPopMatrix();
-
-
-
-
-
-
-	//glPushMatrix(); {
-	//	
-	//	glScalef(3, .1, .6);//Width scale factor along X, Scale factors along the Z axis, Scale factors along the Y axis
-	//	glTranslatef(0, 100, 0);
-	//	glColor4f(0, 1, 0, 0);
-	//	GLUquadricObj *quadric;
-	//	quadric = gluNewQuadric();
-
-	//	gluCylinder(quadric, 10, 10, 60, 60, 60);
-	//}glPopMatrix();
-
-
-
-	//---------------Cone-----------
-
-//	glutSolidCone(20, 20, 30, 20);
-
-
-
-	//-------Rocket----------------------
-
-
-	//glColor3f(0,1,1);
-	//glBegin(GL_QUADS);{
-	//glVertex3f(55,0,10);
-	//glVertex3f(20,0,10);
-	//glVertex3f(15,0,0);
-	//glVertex3f(60,0,0);
-	//}glEnd();
-
-	//glBegin(GL_QUADS);{
-	//glVertex3f(50,0,60);
-	//glVertex3f(20,0,60);
-	//glVertex3f(20,0,10);
-	//glVertex3f(55,0,10);
-	//}glEnd();
-
-	//glColor3f(1,1,0);
-	//glBegin(GL_TRIANGLES);{
-	//glVertex3f(20, 0,60);
-	//glVertex3f(50, 0,60);
-	//glVertex3f(35, 0,80);
-	//}glEnd();
-
-
-
-	//---------------House-------------------
-
-
-
-
-	/*glColor3f(0,0,1);
-	glBegin(GL_QUADS);{
-	glVertex3f(40,-1,60);
-	glVertex3f(30,-1,60);
-	glVertex3f(30,-1,10);
-	glVertex3f(40,-1,10);
-	}glEnd();
-	*/
-
-	//------------door-----------------
-
-
-	/*glColor3f(0,1,1);
-	glBegin(GL_QUADS);{
-	glVertex3f(20,-1,10);
-	glVertex3f(10,-1,10);
-	glVertex3f(10,-1,0);
-	glVertex3f(20,-1,0);
-	}glEnd();*/
-	
-
-	//------------rectangle-----------------
-
-	/*glColor3f(1,0,0);
-	glBegin(GL_QUADS);{
-	glVertex3f(0,0,15);
-	glVertex3f(40,0,15);
-	glVertex3f(40,0,0);
-	glVertex3f(0,0,0);
-	}glEnd();*/
-
-	//------------triangle-----------------
-	/*glColor3f(1,1,0);
-	glBegin(GL_TRIANGLES);{
-	glVertex3f(20, 0,20);
-	glVertex3f(45, 0, 15);
-	glVertex3f(-5, 0, 15);
-	}glEnd();*/
-	
-	//---------------House-------------------
-
-
-
-
-//-------------Circle---------------
-	
-
-
-  /*  glutSolidCube(15);
-	glutWireCube(30);
-	glutSolidSphere(10,20,20);
-	glutWireSphere(30,30,30);
-	glutSolidCone(10,30,100,100);
-	glutWireCone(30,50,70,70);
-
-	glPushMatrix();{
-	glRotatef(90,1,0,0);
-	glutSolidTorus(20,30,70,70);
-	}
-	glPopMatrix();
-
-	glPushMatrix();{
-	glRotatef(90,1,0,0);
-	glutWireTorus(10,25,50,50);
-	}
-	glPopMatrix();
-	
-	glPushMatrix();{
-	glRotatef(90,1,0,0);
-	GLUquadricObj *quadric;
-	quadric=gluNewQuadric();
-	gluCylinder(quadric,10,10,30,20,20);
-	}
-	glPopMatrix();
-*/
-
-
-	//-------------Circle---------------
-
-
-
-	/*glPushMatrix();
-	{
-	glScalef(2,2,2);
-
-	glRotatef(0,1,0,0);
-
-	glBegin(GL_TRIANGLES);{
-	glVertex3f(20, 0, 0);
-	glVertex3f(40, 0, 0);
-	glVertex3f(30, 0, 10);
-	}glEnd();
-	}
-
-	glPopMatrix();
-	*/
+	/**************************************************
+	/ Grid and axes Lines(You can remove them if u want)
+	***************************************************/
+	// draw the three major AXES
+	glBegin(GL_LINES);
+	//X axis
+	glColor3f(0, 1, 0);	//100% Green
+	glVertex3f(-150, 0, 0);
+	glVertex3f(150, 0, 0);
+
+	//Y axis
+	glColor3f(0, 0, 1);	//100% Blue
+	glVertex3f(0, -150, 0);	// intentionally extended to -150 to 150, no big deal
+	glVertex3f(0, 150, 0);
+
+	//Z axis
+	glColor3f(1, 1, 1);	//100% White
+	glVertex3f(0, 0, -150);
+	glVertex3f(0, 0, 150);
+	glEnd();
 
 	//some gridlines along the field
 	int i;
-
-	glColor3f(0.5, 0.5, 0.5);    //grey
-	glBegin(GL_LINES); {
+	if (canDrawGrid){
+		glColor3f(0.5, 0.5, 0.5);	//grey
+		glBegin(GL_LINES);
 		for (i = -10; i <= 10; i++){
 
 			if (i == 0)
-				continue;    //SKIP the MAIN axes
+				continue;	//SKIP the MAIN axes
 
 			//lines parallel to Y-axis
 			glVertex3f(i * 10, -100, 0);
@@ -314,28 +605,159 @@ void display(){
 			glVertex3f(-100, i * 10, 0);
 			glVertex3f(100, i * 10, 0);
 		}
-	}glEnd();
-
-	// draw the three AXES
-
-	glBegin(GL_LINES); {
-		//X axis
-		glColor3f(0, 1, 0);    //100% Green
-		glVertex3f(-150, 0, 0);
-		glVertex3f(150, 0, 0);
-
-		//Y axis
-		glColor3f(0, 0, 1);    //100% Blue
-		glVertex3f(0, -150, 0);    // intentionally extended to -150 to 150, no big deal
-		glVertex3f(0, 150, 0);
-
-		//Z axis
-		glColor3f(1, 1, 1);    //100% White
-		glVertex3f(0, 0, -150);
-		glVertex3f(0, 0, 150);
-	}glEnd();
+		glEnd();
+	}
 
 
+
+
+
+	/****************************
+	/ Add your objects from here
+	****************************/
+
+	//road
+	glPushMatrix();
+	{
+		glColor3f(1, 0, 0);
+		glBegin(GL_QUADS); {
+			glVertex3f(-30, -150, 0);
+			glVertex3f(-28, -150, 0);
+			glVertex3f(-20, 200, 0);
+			glVertex3f(-18, 200, 0);
+
+
+		}glEnd();
+		glBegin(GL_QUADS); {
+			glVertex3f(30, -150, 0);
+			glVertex3f(28, -150, 0);
+			glVertex3f(20, 200, 0);
+			glVertex3f(18, 200, 0);
+
+
+		}glEnd();
+
+		for (int i = -150; i<200; i = i + 20)
+		{
+			glColor3f(1, 1, 0);
+			glBegin(GL_QUADS); {
+				glVertex3f(-1, i, 0);
+				glVertex3f(1, i, 0);
+				glVertex3f(1, i + 15, 0);
+				glVertex3f(-1, i + 15, 0);
+
+
+			}glEnd();
+
+		}
+
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glTranslatef(0, 0, -1);
+		glColor3f(0, 0, 0);
+		glBegin(GL_QUADS); {
+			glVertex3f(-29, -150, 0);
+			glVertex3f(29, -150, 0);
+			glVertex3f(19, 200, 0);
+			glVertex3f(-19, 200, 0);
+		}glEnd();
+	}
+	glPopMatrix();
+
+
+
+	//calling car function
+	
+
+
+	//ADD this line in the end --- if you use double buffer (i.e. GL_DOUBLE)
+
+
+
+
+
+
+
+
+
+
+
+	/*glPushMatrix(); {
+		glTranslatef(carcentrex, carcentrey, carcentrez);
+		drawShape(0);
+		drawShape(50);
+	}glPopMatrix();*/
+
+	glPushMatrix();
+	{
+		glRotatef(-90, 0, 0, 1);
+		glTranslatef(50, 10, 4);
+
+
+			glPushMatrix();
+			{
+				glTranslatef(carcentrex, carcentrey, carcentrez);
+				drawShape(0);
+
+			}glPopMatrix();
+
+
+			glPushMatrix();
+			{
+				glTranslatef(carcentrex, carcentrey, carcentrez);
+				drawShape(-20);
+
+			}glPopMatrix();
+
+			//--------------------Drawing Front Glass------------
+			glPushMatrix();
+			{
+				glTranslatef(carcentrex, carcentrey, carcentrez);
+				frontGlass(0);
+
+
+			}glPopMatrix();
+			////--------------------Drawing Wheel 1------------------
+			glPushMatrix();
+			{
+				glTranslatef(carcentrex, carcentrey, carcentrez);
+				drawWheel(2.5);
+
+			}glPopMatrix();
+
+			glPushMatrix();
+			{
+				glTranslatef(carcentrex, carcentrey, carcentrez);
+				drawWheel(-17);
+
+			}glPopMatrix();
+
+			////--------------------Drawing Wheel 2------------------
+			glPushMatrix();
+			{
+				glTranslatef(carcentrex, carcentrey, carcentrez);
+
+				drawWheel2(2.5, -10);
+
+			}glPopMatrix();
+
+			glPushMatrix();
+			{
+				glTranslatef(carcentrex, carcentrey, carcentrez);
+
+				drawWheel2(-17, -10);
+
+			}glPopMatrix();
+
+
+
+	}glPopMatrix();
+
+
+	
 
 	//ADD this line in the end --- if you use double buffer (i.e. GL_DOUBLE)
 	glutSwapBuffers();
@@ -344,19 +766,135 @@ void display(){
 void animate(){
 	//codes for any changes in Models, Camera
 
-	//cameraAngle += 0.0001;    // camera will rotate at 0.001 radians per frame.
+	//cameraAngle += cameraAngleDelta;	// camera will rotate at 0.002 radians per frame.
 
 	//codes for any changes in Models
 
 	//MISSING SOMETHING? -- YES: add the following
-	glutPostRedisplay();    //this will call the display AGAIN
+	glutPostRedisplay();	//this will call the display AGAIN
 
 }
+
+void keyboardListener(unsigned char key, int x, int y){
+	switch (key){
+
+	case 'w':
+		carcentrex -= speed;
+		break;
+			
+
+
+	case 's':
+		carcentrex += speed;
+			break;
+
+	case 'd':
+		if (carcentrey <= 15)
+		{
+			carcentrey += speed;
+			break;
+		}
+		else
+			break;
+
+	case 'a':
+		if (carcentrey >=-15)
+		{
+			carcentrey -= speed;
+			break;
+		}
+		else
+			break;
+
+	case '8':	//toggle grids
+		canDrawGrid = 1 - canDrawGrid;
+		break;
+
+	case 'p':	//toggle grids
+		cameraAngleDelta = 0;
+		break;
+	case 'r':	//toggle grids
+		cameraAngleDelta = .001;
+		break;
+
+	default:
+		break;
+	}
+}
+
+
+void specialKeyListener(int key, int x, int y){
+	switch (key){
+	case GLUT_KEY_DOWN:		//down arrow key
+		cameraRadius += 10;
+		break;
+	case GLUT_KEY_UP:		// up arrow key
+		if (cameraRadius > 10)
+			cameraRadius -= 10;
+		break;
+
+	case GLUT_KEY_RIGHT:
+		cameraAngle += 0.01;
+		break;
+	case GLUT_KEY_LEFT:
+		cameraAngle -= 0.01;
+		break;
+
+	case GLUT_KEY_PAGE_UP:
+		cameraHeight += 10;
+		break;
+	case GLUT_KEY_PAGE_DOWN:
+		cameraHeight -= 10;
+		break;
+
+	case GLUT_KEY_INSERT:
+		break;
+
+	case GLUT_KEY_HOME:
+		break;
+	case GLUT_KEY_END:
+		break;
+
+	default:
+		break;
+	}
+}
+
+
+
+
+void mouseListener(int button, int state, int x, int y){	//x, y is the x-y of the screen (2D)
+	switch (button){
+	case GLUT_LEFT_BUTTON:
+		if (state == GLUT_DOWN){		// 2 times?? in ONE click? -- solution is checking DOWN or UP
+			cameraAngleDelta = -cameraAngleDelta;
+		}
+		break;
+
+	case GLUT_RIGHT_BUTTON:
+		//........
+		break;
+
+	case GLUT_MIDDLE_BUTTON:
+		//........
+		break;
+
+	default:
+		break;
+	}
+}
+
+
 
 void init(){
 	//codes for initialization
 
-	cameraAngle = 0;    //angle in radian
+	cameraAngle = 0;	//angle in radian
+	cameraAngleDelta = 0.001;
+	canDrawGrid = 1;
+
+	cameraHeight = 50;
+	cameraRadius = 150;
 	//clear the screen
 	glClearColor(0, 0, 0, 0);
 
@@ -384,7 +922,7 @@ void init(){
 
 int main(int argc, char **argv){
 
-	glutInit(&argc, argv);                            //initialize the GLUT library
+	glutInit(&argc, argv);							//initialize the GLUT library
 
 	glutInitWindowSize(500, 500);
 	glutInitWindowPosition(100, 100);
@@ -399,14 +937,21 @@ int main(int argc, char **argv){
 
 	glutCreateWindow("Some Title");
 
-	init();                        //codes for initialization
+	init();						//codes for initialization
 
-	glEnable(GL_DEPTH_TEST);    //enable Depth Testing
+	glEnable(GL_DEPTH_TEST);	//enable Depth Testing
 
-	glutDisplayFunc(display);    //display callback function
-	glutIdleFunc(animate);        //what you want to do in the idle time (when no drawing is occuring)
+	glutDisplayFunc(display);	//display callback function
+	glutIdleFunc(animate);		//what you want to do in the idle time (when no drawing is occuring)
 
-	glutMainLoop();        //The main loop of OpenGL
+	//ADD keyboard listeners:
+	glutKeyboardFunc(keyboardListener);
+	glutSpecialFunc(specialKeyListener);
+
+	//ADD mouse listeners:
+	glutMouseFunc(mouseListener);
+
+	glutMainLoop();		//The main loop of OpenGL
 
 	return 0;
 }
